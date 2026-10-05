@@ -1,0 +1,153 @@
+<!doctype html>
+<!--
+  Source for public/Alibek_Berik_Resume.pdf.
+  To regenerate after editing, run from the project folder (PowerShell):
+  & "C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe" --headless --disable-gpu --no-pdf-header-footer --print-to-pdf="$PWD\public\Alibek_Berik_Resume.pdf" "$PWD\resume\resume.html"
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Alibek Berik — Resume</title>
+<style>
+  @page { size: A4; margin: 10mm 12mm; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: "Segoe UI", Arial, sans-serif; font-size: 9.3pt; line-height: 1.32; color: #1d2433; }
+  a { color: inherit; text-decoration: none; }
+  header { text-align: center; padding-bottom: 7px; border-bottom: 2.5px solid #4a6cf7; }
+  h1 { font-size: 23pt; letter-spacing: 0.06em; font-weight: 700; color: #0f1630; }
+  .headline { margin-top: 1px; font-size: 10.5pt; font-weight: 600; color: #4a6cf7; }
+  .contact { margin-top: 4px; font-size: 9pt; color: #444c63; }
+  .contact span + span::before { content: "  |  "; color: #9aa1b5; white-space: pre; }
+  h2 { margin: 7px 0 3px; padding-bottom: 2px; border-bottom: 1px solid #d5d9e6; font-size: 10.5pt; letter-spacing: 0.08em; text-transform: uppercase; color: #0f1630; }
+  .item { margin-top: 5px; }
+  .row { display: flex; justify-content: space-between; gap: 12px; align-items: baseline; }
+  .title { font-weight: 700; color: #0f1630; }
+  .sub { color: #4a6cf7; font-weight: 600; }
+  .date { font-weight: 600; color: #444c63; white-space: nowrap; font-size: 9pt; }
+  .link { font-size: 8.6pt; color: #5a6380; }
+  ul { margin: 2px 0 0 15px; }
+  li { margin-top: 1.5px; }
+  li::marker { color: #4a6cf7; }
+  p.summary { text-align: justify; }
+  .skills { display: grid; grid-template-columns: 128px 1fr; gap: 2px 10px; margin-top: 3px; }
+  .skills dt { font-weight: 700; color: #0f1630; }
+  .certs { display: grid; grid-template-columns: 1fr 1fr; gap: 2px 18px; margin: 3px 0 0 15px; }
+  .certs li { margin: 0; }
+  .muted { color: #5a6380; }
+  b { color: #0f1630; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>ALIBEK BERIK</h1>
+  <div class="headline">AI/ML Engineer · Machine Learning, LLM/RAG Systems &amp; Computer Vision</div>
+  <div class="contact">
+    <span>Kuala Lumpur, Malaysia</span>
+    <span><a href="mailto:alibekberik13@gmail.com">alibekberik13@gmail.com</a></span>
+    <span><a href="https://alibekberik.github.io">alibekberik.github.io</a></span>
+    <span><a href="https://github.com/AlibekBerik">github.com/AlibekBerik</a></span>
+    <span><a href="https://www.linkedin.com/in/alibek-berik-14b269193/">LinkedIn</a></span>
+  </div>
+</header>
+
+<h2>Professional Summary</h2>
+<p class="summary">
+  AI/ML student with production experience building AI inference pipelines and a track record of shipping end-to-end
+  ML systems — from SQL feature engineering and XGBoost to fine-tuned transformers and LLM-powered RAG, deployed as
+  live dashboards, REST APIs and Docker containers. Trilingual (English C1, Russian, Kazakh). Seeking an AI/ML or
+  software engineering internship to apply these skills alongside experienced engineers.
+</p>
+
+<h2>Experience</h2>
+<div class="item">
+  <div class="row">
+    <div><span class="title">AI/ML Engineer</span> · <span class="sub">GlowUp Face</span></div>
+    <span class="date">Aug 2026 – Oct 2026</span>
+  </div>
+  <ul>
+    <li>Engineered and optimised AI inference pipelines integrating open-source <b>computer vision models</b> and the <b>OpenAI API</b>, processing <b>1,000+</b> user facial, skin and hairstyle analysis requests.</li>
+    <li>Streamlined backend workflows and prompt-engineering pipelines, reducing image-analysis latency and improving response accuracy for a platform scaling to thousands of active users.</li>
+    <li>Collaborated on product architecture and feature deployment, building core ML capabilities from scratch.</li>
+  </ul>
+</div>
+
+<h2>Projects</h2>
+<div class="item">
+  <div class="row">
+    <div><span class="title">Kazakh Culture RAG Q&amp;A System</span> · <span class="sub">LLM + RAG + Docker</span> <span class="link">· github.com/AlibekBerik/rag-qa-system</span></div>
+    <span class="date">2026</span>
+  </div>
+  <ul>
+    <li>Designed and built a retrieval-augmented generation pipeline (<b>ChromaDB</b> vector search + <b>Groq LLM</b> generation, sentence-transformers embeddings) that answers questions grounded in real source documents and cites them.</li>
+    <li>Eliminated hallucination on out-of-scope queries through document chunking, semantic embeddings and prompt-constrained generation, then explicitly tested and confirmed correct refusal behaviour.</li>
+    <li>Resolved GPU/CPU dependency conflicts to containerise the <b>FastAPI</b> service with <b>Docker</b>.</li>
+  </ul>
+</div>
+<div class="item">
+  <div class="row">
+    <div><span class="title">Customer Churn Prediction System</span> · <span class="sub">SQL + ML Pipeline + Deployment</span> <span class="link">· live demo on Streamlit Cloud</span></div>
+    <span class="date">2026</span>
+  </div>
+  <ul>
+    <li>Increased churn recall by 68% relatively (<b>40% → 67%</b>, AUC-ROC 0.759) by training an <b>XGBoost</b> classifier and addressing class imbalance with <b>SMOTE</b> at a measured precision tradeoff.</li>
+    <li>Engineered RFM features on <b>800,000+</b> real transactions with SQL CTEs, joins and aggregations; caught and fixed target leakage; deployed as a live <b>Streamlit</b> dashboard.</li>
+  </ul>
+</div>
+<div class="item">
+  <div class="row">
+    <div><span class="title">Sentiment Classifier</span> · <span class="sub">Fine-tuned Transformer + REST API</span> <span class="link">· model on Hugging Face Hub</span></div>
+    <span class="date">2026</span>
+  </div>
+  <ul>
+    <li>Achieved <b>85.9% accuracy</b> and a <b>0.866 F1</b> score by fine-tuning <b>DistilBERT</b> on IMDb reviews; served real-time inference through a <b>FastAPI</b> backend with Swagger UI.</li>
+    <li>Published the trained model to Hugging Face Hub and documented free-tier hosting constraints transparently.</li>
+  </ul>
+</div>
+<div class="item">
+  <div class="row">
+    <div><span class="title">Malaysia House Price Prediction</span> · <span class="sub">Regression Pipeline</span></div>
+    <span class="date">2025</span>
+  </div>
+  <ul>
+    <li>Improved R² from <b>0.35 to 0.60</b> (+71%) with custom features (location clusters, estimated total price) and <b>LightGBM</b>, with cross-validation and hyperparameter tuning on 5,000+ records.</li>
+  </ul>
+</div>
+<p class="muted" style="margin-top:4px">
+  <b>More:</b> tool-using AI agent (smolagents, web search) · MNIST CNN (97% test accuracy) · spam classifier (~95% accuracy) — all on github.com/AlibekBerik
+</p>
+
+<h2>Education</h2>
+<div class="item">
+  <div class="row">
+    <div><span class="title">Bachelor in Artificial Intelligence</span> · <span class="sub">Xiamen University Malaysia</span></div>
+    <span class="date">Sep 2025 – Aug 2029 (expected)</span>
+  </div>
+  <ul>
+    <li>CGPA: 3.09 / 4.0 · Coursework: Machine Learning, Neural Networks, Data Structures, Linear Algebra, Statistics</li>
+  </ul>
+</div>
+
+<h2>Skills</h2>
+<dl class="skills">
+  <dt>LLMs &amp; RAG</dt><dd>RAG, ChromaDB, sentence-transformers, OpenAI &amp; Groq APIs, smolagents, prompting</dd>
+  <dt>ML / Deep Learning</dt><dd>PyTorch, TensorFlow/Keras, HF Transformers, Scikit-learn, XGBoost, LightGBM</dd>
+  <dt>Deployment</dt><dd>FastAPI, Docker, Streamlit Cloud, Hugging Face Hub</dd>
+  <dt>Data &amp; Tools</dt><dd>Python, SQL, Pandas, NumPy, SQLite, Git, Linux, Jupyter, Google Colab</dd>
+  <dt>Languages</dt><dd>English (C1), Russian (fluent), Kazakh (native)</dd>
+</dl>
+
+<h2>Certifications</h2>
+<ul class="certs">
+  <li>CS50's Intro to AI with Python — <span class="muted">Harvard, 2026</span></li>
+  <li>Machine Learning with Python — <span class="muted">freeCodeCamp, 2026</span></li>
+  <li>ML in Production — <span class="muted">DeepLearning.AI, 2025</span></li>
+  <li>Fundamentals of ML &amp; AI — <span class="muted">AWS, 2025</span></li>
+  <li>Supervised Machine Learning — <span class="muted">DeepLearning.AI &amp; Stanford</span></li>
+  <li>Linear Algebra for ML — <span class="muted">DeepLearning.AI</span></li>
+  <li>Claude Code 101 — <span class="muted">Anthropic, 2026</span></li>
+  <li>Digital Skills: AI — <span class="muted">Accenture</span></li>
+</ul>
+
+</body>
+</html>

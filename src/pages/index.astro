@@ -1,0 +1,362 @@
+---
+import Base from '../layouts/Base.astro';
+import { getCollection, render } from 'astro:content';
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+
+const [profileEntry] = await getCollection('profile');
+const p = profileEntry.data;
+const { Content: About } = await render(profileEntry);
+
+const [whyEntry] = await getCollection('why');
+const [skillsEntry] = await getCollection('skills');
+const [eduEntry] = await getCollection('education');
+const edu = eduEntry.data;
+
+const projects = await Promise.all(
+  (await getCollection('projects', ({ data }) => !data.draft))
+    .sort((a, b) => a.data.order - b.data.order)
+    .map(async (entry) => ({ ...entry.data, Content: (await render(entry)).Content })),
+);
+const experience = await Promise.all(
+  (await getCollection('experience', ({ data }) => !data.draft))
+    .sort((a, b) => a.data.order - b.data.order)
+    .map(async (entry) => ({ ...entry.data, Content: (await render(entry)).Content })),
+);
+const certificates = (await getCollection('certificates', ({ data }) => !data.draft)).sort(
+  (a, b) => a.data.order - b.data.order,
+);
+
+const [firstName, ...rest] = p.name.split(' ');
+const lastName = rest.join(' ');
+const initials = p.name.split(' ').map((w) => w[0]).join('');
+const cvHref = `${base}/${p.cv.replace(/^\//, '')}`;
+
+const nav = [
+  { id: 'about', label: 'About' },
+  { id: 'why', label: 'Why me' },
+  { id: 'skills', label: 'Skills' },
+  ...(experience.length ? [{ id: 'experience', label: 'Experience' }] : []),
+  { id: 'projects', label: 'Projects' },
+  { id: 'education', label: 'Education' },
+  ...(certificates.length ? [{ id: 'certificates', label: 'Certificates' }] : []),
+  { id: 'contact', label: 'Contact' },
+];
+
+// The "code card" in the hero, built from profile data.
+const esc = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+const list = (arr: string[]) => `[${arr.map((x) => `<span class="s">"${esc(x)}"</span>`).join(', ')}]`;
+const varName = firstName.toLowerCase();
+const code = [
+  `<span class="k">from</span> career <span class="k">import</span> <span class="t">MLEngineer</span>`,
+  ``,
+  `${varName} = <span class="t">MLEngineer</span>(`,
+  `    focus=${list(p.focus)},`,
+  `    stack=${list(p.heroStack)},`,
+  `    speaks=${list(p.languages)},`,
+  `    status=<span class="s">"open_to_internships"</span>,`,
+  `)`,
+  ``,
+  `${varName}.<span class="f">ship</span>()  <span class="c"># data → model → production</span>`,
+].join('\n');
+---
+
+<Base title={`${p.name} — ${p.role}`} description={p.tagline}>
+  <header class="nav">
+    <div class="container nav-inner">
+      <a href="#top" class="brand">
+        <span class="brand-mark">{initials}</span>
+        <span class="brand-name">{p.name}</span>
+      </a>
+      <nav class="nav-links" aria-label="Sections">
+        {nav.map((item) => <a href={`#${item.id}`}>{item.label}</a>)}
+      </nav>
+      <a class="btn btn-primary btn-small" href={cvHref} download>Download CV</a>
+    </div>
+  </header>
+
+  <main id="top">
+    <!-- HERO -->
+    <section class="hero">
+      <div class="hero-glow" aria-hidden="true"></div>
+      <div class="container hero-grid">
+        <div class="hero-copy">
+          <p class="pill"><span class="pulse" aria-hidden="true"></span>{p.availability}</p>
+          <h1 class="hero-title">
+            {firstName} <span class="grad-text">{lastName}</span>
+          </h1>
+          <p class="hero-role">{p.role}</p>
+          <p class="hero-tagline">{p.tagline}</p>
+          <div class="hero-ctas">
+            <a class="btn btn-primary" href="#projects">See my projects →</a>
+            <a class="btn btn-ghost" href={cvHref} download>Download CV</a>
+          </div>
+          <ul class="hero-meta">
+            <li>📍 {p.location}</li>
+            <li><a href={`mailto:${p.email}`}>✉️ {p.email}</a></li>
+            <li><a href={p.github} target="_blank" rel="noopener">GitHub ↗</a></li>
+            {p.linkedin && <li><a href={p.linkedin} target="_blank" rel="noopener">LinkedIn ↗</a></li>}
+          </ul>
+        </div>
+        <div class="code-card" aria-label="Profile summary as code">
+          <div class="code-head">
+            <span class="dot" style="background:#ff5f57"></span>
+            <span class="dot" style="background:#febc2e"></span>
+            <span class="dot" style="background:#28c840"></span>
+            <span class="code-file">{varName}.py</span>
+          </div>
+          <pre><code set:html={code} /></pre>
+        </div>
+      </div>
+      <div class="container">
+        <ul class="stats">
+          {
+            p.stats.map((s) => (
+              <li class="stat">
+                <span class="stat-value grad-text">{s.value}</span>
+                <span class="stat-label">{s.label}</span>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </section>
+
+    <!-- ABOUT -->
+    <section id="about" class="section">
+      <div class="container split reveal">
+        <div>
+          <p class="kicker">About me</p>
+          <h2 class="section-title">Turning data into working products</h2>
+          {
+            p.photo && (
+              <div class="about-photo">
+                <img src={`${base}/${p.photo}`} alt={`Portrait of ${p.name}`} width="800" height="800" loading="lazy" />
+              </div>
+            )
+          }
+        </div>
+        <div class="prose lead"><About /></div>
+      </div>
+    </section>
+
+    <!-- WHY HIRE ME -->
+    <section id="why" class="section section-alt">
+      <div class="container">
+        <div class="reveal">
+          <p class="kicker">Why hire me</p>
+          <h2 class="section-title">{whyEntry.data.title}</h2>
+        </div>
+        <div class="grid grid-2">
+          {
+            whyEntry.data.reasons.map((r, i) => (
+              <article class="card reason reveal">
+                <span class="reason-num">{String(i + 1).padStart(2, '0')}</span>
+                <h3>{r.title}</h3>
+                <p>{r.text}</p>
+              </article>
+            ))
+          }
+        </div>
+      </div>
+    </section>
+
+    <!-- SKILLS -->
+    <section id="skills" class="section">
+      <div class="container">
+        <div class="reveal">
+          <p class="kicker">Skills</p>
+          <h2 class="section-title">My toolkit</h2>
+        </div>
+        <div class="grid grid-3">
+          {
+            skillsEntry.data.groups.map((g) => (
+              <div class="card reveal">
+                <h3 class="card-label">{g.name}</h3>
+                <ul class="chips">
+                  {g.items.map((item) => <li class="chip">{item}</li>)}
+                </ul>
+              </div>
+            ))
+          }
+        </div>
+      </div>
+    </section>
+
+    <!-- EXPERIENCE (shown only when there are non-draft entries) -->
+    {
+      experience.length > 0 && (
+        <section id="experience" class="section section-alt">
+          <div class="container">
+            <div class="reveal">
+              <p class="kicker">Experience</p>
+              <h2 class="section-title">Where I've worked</h2>
+            </div>
+            <ol class="timeline">
+              {experience.map(({ Content, ...job }) => (
+                <li class="card timeline-item reveal">
+                  <div class="timeline-head">
+                    <div>
+                      <h3>{job.role}</h3>
+                      <p class="muted">
+                        {job.org}
+                        {job.location && ` · ${job.location}`}
+                      </p>
+                    </div>
+                    <span class="date">
+                      {job.start} – {job.end}
+                    </span>
+                  </div>
+                  <div class="prose">
+                    <Content />
+                  </div>
+                </li>
+              ))}
+            </ol>
+          </div>
+        </section>
+      )
+    }
+
+    <!-- PROJECTS -->
+    <section id="projects" class="section">
+      <div class="container">
+        <div class="reveal">
+          <p class="kicker">Projects</p>
+          <h2 class="section-title">Things I've built and shipped</h2>
+        </div>
+        <div class="grid grid-2">
+          {
+            projects.map(({ Content, ...proj }) => (
+              <article class="card project reveal">
+                {proj.image && (
+                  <div class="project-media">
+                    <img src={`${base}/${proj.image}`} alt={`${proj.title} demo`} loading="lazy" />
+                  </div>
+                )}
+                <div class="project-top">
+                  <span class="project-cat">{proj.category}</span>
+                  <span class="project-year">{proj.year}</span>
+                </div>
+                <h3 class="project-title">{proj.title}</h3>
+                <p class="project-summary">{proj.summary}</p>
+                {proj.highlight && (
+                  <div class="metric">
+                    <span class="metric-value grad-text">{proj.highlight.value}</span>
+                    <span class="metric-label">{proj.highlight.label}</span>
+                  </div>
+                )}
+                <ul class="chips chips-small">
+                  {proj.stack.map((t) => <li class="chip">{t}</li>)}
+                </ul>
+                <details class="project-details">
+                  <summary>How I built it</summary>
+                  <div class="prose"><Content /></div>
+                </details>
+                {proj.links.length > 0 && (
+                  <div class="project-links">
+                    {proj.links.map((l) => (
+                      <a class="link-btn" href={l.url} target="_blank" rel="noopener">
+                        {l.label} ↗
+                      </a>
+                    ))}
+                  </div>
+                )}
+              </article>
+            ))
+          }
+          <a class="card project more-card reveal" href={p.github} target="_blank" rel="noopener">
+            <span class="more-icon" aria-hidden="true">↗</span>
+            <h3 class="project-title">More on GitHub</h3>
+            <p class="project-summary">Coursework experiments, a CIFAR-10 optimizer comparison, an NLP chatbot and more.</p>
+            <span class="link-btn">github.com/AlibekBerik</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- EDUCATION -->
+    <section id="education" class="section section-alt">
+      <div class="container">
+        <div class="reveal">
+          <p class="kicker">Education</p>
+          <h2 class="section-title">Where I'm learning</h2>
+        </div>
+        <div class="card edu reveal">
+          <div class="timeline-head">
+            <div>
+              <h3>{edu.degree}</h3>
+              <p class="muted">{edu.school}</p>
+            </div>
+            <span class="date">{edu.start} – {edu.end}</span>
+          </div>
+          {edu.gpa && <p class="edu-gpa">CGPA <strong>{edu.gpa}</strong></p>}
+          {
+            edu.coursework.length > 0 && (
+              <>
+                <p class="card-label">Relevant coursework</p>
+                <ul class="chips">
+                  {edu.coursework.map((c) => (
+                    <li class="chip">{c}</li>
+                  ))}
+                </ul>
+              </>
+            )
+          }
+        </div>
+      </div>
+    </section>
+
+    <!-- CERTIFICATES (shown only when there are non-draft entries) -->
+    {
+      certificates.length > 0 && (
+        <section id="certificates" class="section">
+          <div class="container">
+            <div class="reveal">
+              <p class="kicker">Certificates</p>
+              <h2 class="section-title">Credentials</h2>
+            </div>
+            <div class="grid grid-3">
+              {certificates.map(({ data: c }) => (
+                <article class="card cert reveal">
+                  <span class="cert-icon" aria-hidden="true">🏅</span>
+                  <h3>{c.title}</h3>
+                  {(c.issuer || c.date) && <p class="muted">{[c.issuer, c.date].filter(Boolean).join(' · ')}</p>}
+                  {c.url && (
+                    <a class="link-btn" href={c.url} target="_blank" rel="noopener">
+                      Verify ↗
+                    </a>
+                  )}
+                </article>
+              ))}
+            </div>
+          </div>
+        </section>
+      )
+    }
+
+    <!-- CONTACT -->
+    <section id="contact" class="section">
+      <div class="container">
+        <div class="contact-box reveal">
+          <p class="kicker">Contact</p>
+          <h2 class="contact-title">Let's build something <span class="grad-text">intelligent</span> together.</h2>
+          <p class="contact-text">
+            I'm actively looking for AI/ML and software engineering internships. If my work looks like a fit,
+            I'd love to hear from you.
+          </p>
+          <div class="hero-ctas center">
+            <a class="btn btn-primary" href={`mailto:${p.email}`}>Email me</a>
+            <a class="btn btn-ghost" href={p.github} target="_blank" rel="noopener">GitHub ↗</a>
+            {p.linkedin && <a class="btn btn-ghost" href={p.linkedin} target="_blank" rel="noopener">LinkedIn ↗</a>}
+            <a class="btn btn-ghost" href={cvHref} download>Download CV</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container">© {new Date().getFullYear()} {p.name} · Built with Astro</div>
+  </footer>
+</Base>
